@@ -4,10 +4,10 @@
 - Su un hardware fisico si può avere un numero arbitrario di attori, indipendentemente dal numero di threads fisici supportati.
 
 ## Caratteristiche
-  - **stato** (_incapsulato_, un attore non può accedere allo stato degli altri)
-  - **comportamento reattivo** (esegue azioni solo quando riceve messaggi) (azioni rappresentate da `handler`)
-  - **flusso di controllo**
-  - **coda di messaggi in arrivo**
+  - **Stato** (_incapsulato_, un attore non può accedere allo stato degli altri)
+  - **Comportamento reattivo** (esegue azioni solo quando riceve messaggi) (azioni rappresentate da `handler`)
+  - **Flusso di controllo**
+  - **Coda di messaggi in arrivo**
 - Possono comunicare <=> conoscono i rispettivi identificatori.
 - Vengono **evitate le corse critiche**.
 
