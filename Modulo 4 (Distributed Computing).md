@@ -45,30 +45,62 @@ Si assume ordinamento parziale tra gli eventi (tempo logico).
       - **Esempio**: _e_ è l'invio di un messaggio nel processo P1, _f_ è la ricezione del messaggio nel processo P2.
   - **Transitività**: se esiste _g_ tale che ( _e_ → _g_) e ( _g_ → _f_), allora  _e_ → _f_.
 
-## Modelli utilizzati - Happened before - Meccanismi implementativi
-- Logical clocks: una funzione _C_ di un processo _Pi_ assegna un numero _Ci(a)_ ad ogni evento _a_, secondo la **clock condition**:
+## Modelli utilizzati - Happened before (Meccanismi implementativi)
+- **Logical clocks**: una funzione _C_ di un processo _Pi_ assegna un numero _Ci(a)_ ad ogni evento _a_, secondo la **clock condition**:
   - Se (_a_ → _b_) allora (_Ci(a)_ → _Cj(b)_), con _a_ evento del processo _Pi_ e _b_ evento del processo _Pj_.
   E' inoltre sempre vero che se (_a_ → _b_) allora (_Ci(a)_ < _Cj(b)_), quindi se un evento è happened before un altro, allora il valore del clock logico del primo evento è minore del secondo. Ma **non è vero il contrario**
-- Vector clock: risolvono la limitazione dell'affermazione precedente. Un vettore _VC_, di dimensione uguale al numero di processi considerati, viene assegnato ad ogni evento.
+- **Vector clock**: risolvono la limitazione dell'affermazione precedente. Un vettore _VC_, di dimensione uguale al numero di processi considerati, viene assegnato ad ogni evento.
   - (_a_ → _b_) ⟺ (_VC(a)_ < _VC(b)_)
 
 ## Modelli utilizzati - Potential causality
 L'idea di base è che non tutti gli eventi di un sistema concorrente siano direttamente correlati tra loro. Alcuni di essi possono essere ad esempio causalmente in relazione oppure indipendenti/concorrenti.
-  - Concorrenza tra eventi: (_e_ || _f_) = not (_e_ → _f_) and not (_f_ → _e_).
+  - **Concorrenza tra eventi**: (_e_ || _f_) = not (_e_ → _f_) and not (_f_ → _e_).
 
-## Problemi dei sistemi distribuiti
-L'assenza di un clock condiviso, di risorse condivise e il dover gestire i fallimenti, comportano il dover affrontare i seguenti problemi:
-- **Mutua esclusione** tra processi distruibuiti, ma bisogna comunque rispettare i principi di safety, liveness e fairness.
-  - **Soluzione con algoritmo centralizzato**: si utilizza un coordinatore, il quale gestisce le richieste secondo la relazione happened before e impiega i vector clock. Il coordinatore ritarda ogni richiesta finchè le precedenti non vengono ricevute.
-    - **Elezione del leader/coordinatore (algoritmo di Chang-Roberts)**: viene imposta una topologia logica ad anello. Ogni processo ha un PID univoco. Alla fine il leader sarà quello col PID più alto.<br>
-    L'elezione parte da un processo, il quale (se non ha ancora ricevuto un PID più alto del proprio) invia il proprio PID ad uno dei processi vicini. Se riceve un PID più alto del proprio, lo inoltra. Se riceve il suo stesso PID, allora si dichiara leader, informando tutti gli altri tramite un messaggio.
-  - **Soluzione con algoritmo decentralizzato (Agrawala)**: per accedere ad una risorsa, un processo invia un messaggio con timestamp a tutti gli altri processi.
-    - Se un processo _P1_ **non** è interessato a quella risorsa, invia un OK come risposta.
-    - Se un processo _P1_ è interessato ma ha un timestamp **superiore** a quello ricevuto da _P2_, invia un OK come risposta e si mette in coda per accedere successivamente alla risorsa.
-    - Se un processo _P1_ è interessato ma ha un timestamp **inferiore** a quello ricevuto da _P2_, allora ha la precedenza su quest'ultimo, il quale viene aggiunto alla coda dei processi in attesa.
-      - _P2_ accederà alla risorsa solo quando riceverà un OK da tutti gli altri che hanno la precedenza.
-- **Ordinamento dei messaggi**: essendoci massimo non-determinismo nell'ordine dei messaggi inviati, l'unica soluzione è effettuare un ordinamento causale. I vector clock vengono estesi ad una matrice _m_ di interi, la quale permette ad un processo _Pi_ di tenere del numero di messaggi inviati da un processo _Pj_ ad un altro _Pk_ (_m[j,k]_).
-  - **Algoritmo**
-    - Quando _Pi_ invia un messaggio a _Pj_, incrementa _m[i,j]_ e invia la matrice insieme al messaggio.
-    - Un messaggio può essere ricevuto (è **eligible**) da un processo _Pj_ quando il numero di messaggi inviati da _Pi_ a _Pj_ è minore o uguale al valore presente nella matrice di _Pi_ (logicamente, i messaggi ricevuti da _Pj_ non devono essere più dei messaggi inviati da _Pi_ a _Pj_)
-    - Se un messaggio non può essere ricevuto, viene aggiunto ad un buffer finchè non diventerà finalmente eligible.
+## Problemi dei sistemi distribuiti - Mutua esclusione
+Si intende la mutua esclusione tra processi distruibuiti, ma bisogna comunque rispettare i principi di safety, liveness e fairness.
+- **Soluzione con algoritmo centralizzato**: si utilizza un coordinatore, il quale gestisce le richieste secondo la relazione happened before e impiega i vector clock. Il coordinatore ritarda ogni richiesta finchè le precedenti non vengono ricevute.
+  - **Elezione del leader/coordinatore (algoritmo di Chang-Roberts)**: viene imposta una topologia logica ad anello. Ogni processo ha un PID univoco. Alla fine il leader sarà quello col PID più alto.<br>
+  L'elezione parte da un processo, il quale (se non ha ancora ricevuto un PID più alto del proprio) invia il proprio PID ad uno dei processi vicini. Se riceve un PID più alto del proprio, lo inoltra. Se riceve il suo stesso PID, allora si dichiara leader, informando tutti gli altri tramite un messaggio.
+- **Soluzione con algoritmo decentralizzato (Agrawala)**: per accedere ad una risorsa, un processo invia un messaggio con timestamp a tutti gli altri processi.
+  - Se un processo _P1_ **non** è interessato a quella risorsa, invia un OK come risposta.
+  - Se un processo _P1_ è interessato ma ha un timestamp **superiore** a quello ricevuto da _P2_, invia un OK come risposta e si mette in coda per accedere successivamente alla risorsa.
+  - Se un processo _P1_ è interessato ma ha un timestamp **inferiore** a quello ricevuto da _P2_, allora ha la precedenza su quest'ultimo, il quale viene aggiunto alla coda dei processi in attesa.
+    - _P2_ accederà alla risorsa solo quando riceverà un OK da tutti gli altri che hanno la precedenza.
+
+## Problemi dei sistemi distribuiti - Ordinamento dei messaggi
+Essendoci massimo non-determinismo nell'ordine dei messaggi inviati, l'unica soluzione è effettuare un ordinamento causale. I vector clock vengono estesi ad una matrice _m_ di interi, la quale permette ad un processo _Pi_ di tenere del numero di messaggi inviati da un processo _Pj_ ad un altro _Pk_ (_m[j,k]_).
+- **Algoritmo**
+  - Quando _Pi_ invia un messaggio a _Pj_, incrementa _m[i,j]_ e invia la matrice insieme al messaggio.
+  - Un messaggio può essere ricevuto (è **eligible**) da un processo _Pj_ quando il numero di messaggi inviati da _Pi_ a _Pj_ è minore o uguale al valore presente nella matrice di _Pi_ (logicamente, i messaggi ricevuti da _Pj_ non devono essere più dei messaggi inviati da _Pi_ a _Pj_)
+  - Se un messaggio non può essere ricevuto, viene aggiunto ad un buffer finchè non diventerà finalmente eligible.
+- **Alternativa all'ordinamento causale: Ordinamento totale**: più robusto del precedente. Utilizza i seguenti meccanismi, utili a rendere sincrono un sistema distribuito:
+  - **Pulses**: equivalente di un contatore distribuito. Garantisce che un messaggio inviato ad un impulso _i_, verrà ricevuto in quello stesso impulso _i_.
+  - **Synchronizers**: meccanismo che indica quando un processo può generare un pulse. Ogni processo invia un solo messaggio per ogni pulse. Se un processo riceve un messaggio dal pulse successivo a quello corrente, attende prima il messaggio sincronizzato (quindi dal pulse corrente).
+
+## Problemi dei sistemi distribuiti - Determinazione dello stato globale
+Calcolarlo in tempo reale è impossibile. La soluzione migliore è quella di raccogliere e ordinare causalmente gli stati passati, applicando il modello happened before. Lo stato globale risultante ottenuto in questo modo è detto **global snapshot**.
+- **Soluzione (Chandy-Lamport)**:
+  - Ogni processo ha uno stato e dei canali. A loro volta i canali hanno uno stato (messaggi in transito) e sono unidirezionali, con coda FIFO.
+  - Ogni processo è inizialmente di colore bianco. 
+  - Ogni processo salva il proprio stato locale e diventa di colore rosso.
+  - Una volta rosso, ogni processo invia un messaggio _marker_ su tutti i canali e registra quelli che riceve.
+  - Se un processo riceve un _marker_ per la prima volta, salva il proprio stato locale e diventa di colore rosso, per poi continuare eseguire il punto precedente.
+  - Se un processo riceve un _marker_ su un canale sul quale l'aveva già ricevuto, smette di registrarli.
+  - Il tutto termina quando tutti i processi hanno ricevuto un _marker_ su tutti i canali.
+
+## Problemi dei sistemi distribuiti - Consenso
+Trovare un accordo tra i processi distribuiti riguardo il valore di una proprietà, un'azione da eseguire o altro. Un ulteriore problema può essere la gestione di failure che possono verificarsi durante il calcolo del consenso stesso. Si eseguono infatti più round per eliminare processi che prendono decisioni sbagliate a seguito di failure. 
+- **Algoritmi per reti asincrone**: inesistenti. Anche solo un fallimento di un processo rende impossibile risolvere il problema del consenso (**FLP result**).
+- **Algoritmi per reti sincrone**: 
+  - **Basic**: ogni processo invia i propri valori a tutti gli altri e riceve a sua volta tutti i valori da loro. Si prende una decisione in base a questi valori, dopo aver ripetuto la procedura più volte.
+    - Crash => algoritmo funziona ugualmente.
+    - Byzantine problem (processo fornisce arbitrariamente dati errati) => algoritmo non funziona.  
+  - **Byzantine General Agreement**: risolve il byzantine problem.
+    - Vengono eseguiti _f_+1 round (con _f_ numero di processi faulty). 
+    - Si nomina a rotazione un coordinatore (**king**), che in almeno 1 round non deve essere faulty. 
+    - Ogni processo scambia i propri valori con tutti gli altri e si effettua una stima. 
+    - Quando un processo riceve il valore dal king, decide se mantenere il proprio valore o utilizzare quello del king.
+    - Se il vettore _V_ (contenente gli _N_ valori di tutti i processi) contiene _N/2 + f_ copie di un valore, viene scelto quest'ultimo, altrimenti viene scelto quello del king.
+  - **Paxos**: protocollo utilizzato quando si ha a che fare con una rete di nodi non affidabili.
+  - **Raft**: equivalente a Paxos in termini di fault-tolerance e performance, ma più semplice da capire e implementare. Consiste nel distribuire una macchina a stati su un cluster di sistemi computazionali. 
+
