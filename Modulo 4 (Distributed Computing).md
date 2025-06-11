@@ -81,12 +81,12 @@ Essendoci massimo non-determinismo nell'ordine dei messaggi inviati, l'unica sol
 Calcolarlo in tempo reale è impossibile. La soluzione migliore è quella di raccogliere e ordinare causalmente gli stati passati, applicando il modello happened before. Lo stato globale risultante ottenuto in questo modo è detto **global snapshot**.
 - **Soluzione (Chandy-Lamport)**:
   - Ogni processo ha uno stato e dei canali. A loro volta i canali hanno uno stato (messaggi in transito) e sono unidirezionali, con coda FIFO.
-  - Ogni processo è inizialmente di colore bianco. 
-  - Ogni processo salva il proprio stato locale e diventa di colore rosso.
-  - Una volta rosso, ogni processo invia un messaggio _marker_ su tutti i canali e registra quelli che riceve.
-  - Se un processo riceve un _marker_ per la prima volta, salva il proprio stato locale e diventa di colore rosso, per poi continuare eseguire il punto precedente.
-  - Se un processo riceve un _marker_ su un canale sul quale l'aveva già ricevuto, smette di registrarli.
-  - Il tutto termina quando tutti i processi hanno ricevuto un _marker_ su tutti i canali.
+  - Ogni processo è inizialmente di colore **bianco**. 
+  - Ogni processo salva il proprio **stato locale** e diventa di colore **rosso**.
+  - Una volta rosso, ogni processo invia un **messaggio marker** su tutti i canali e registra quelli che riceve.
+  - Se un processo **riceve un marker per la prima volta**, salva il proprio stato locale e diventa di colore rosso, per poi continuare eseguire il punto precedente.
+  - Se un processo **riceve un marker_su un canale sul quale l'aveva già ricevuto**, smette di registrarli.
+  - Il tutto termina quando tutti i processi **hanno ricevuto un marker su tutti i canali**.
 
 ## Problemi dei sistemi distribuiti - Consenso
 Trovare un accordo tra i processi distribuiti riguardo il valore di una proprietà, un'azione da eseguire o altro. Un ulteriore problema può essere la gestione di failure che possono verificarsi durante il calcolo del consenso stesso. Si eseguono infatti più round per eliminare processi che prendono decisioni sbagliate a seguito di failure. 
@@ -103,4 +103,19 @@ Trovare un accordo tra i processi distribuiti riguardo il valore di una propriet
     - Se il vettore _V_ (contenente gli _N_ valori di tutti i processi) contiene _N/2 + f_ copie di un valore, viene scelto quest'ultimo, altrimenti viene scelto quello del king.
   - **Paxos**: protocollo utilizzato quando si ha a che fare con una rete di nodi non affidabili.
   - **Raft**: equivalente a Paxos in termini di fault-tolerance e performance, ma più semplice da capire e implementare. Consiste nel distribuire una macchina a stati su un cluster di sistemi computazionali. 
+
+## Service Oriented Computing
+Approccio attualmente più utilizzato per sviluppare sistemi distribuiti.<br>
+**Servizio**: componente software indipendente, accessibile via rete, il quale fornisce una funzionalità.<br>
+Possibili implementazioni sono:
+- SOA
+- REST-full
+- Microservizi
+
+## SOA (Service Oriented Architectures)
+La business logic in questo caso è scomposta in parti (servizi) più piccole, autonome, indipendenti e distribuite.
+- Possibile utilizzare linguaggi e tecnologie diverse per ogni servizio.
+- Ogni servizio è localizzabile tramite un endpoint **(URI = Universal Resource Identifier)**
+- Per comunicare tra loro, i servizi devono avere un _contract_ (API) chiaro e aderire ad uno standard.
+- La comunicazione avviene tramite messaggi, scambiabili tramite **richieste HTTP** o tramite **SOAP (Simple Object Access Protocol)**
 
