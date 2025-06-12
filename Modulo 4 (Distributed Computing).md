@@ -108,14 +108,60 @@ Trovare un accordo tra i processi distribuiti riguardo il valore di una propriet
 Approccio attualmente più utilizzato per sviluppare sistemi distribuiti.<br>
 **Servizio**: componente software indipendente, accessibile via rete, il quale fornisce una funzionalità.<br>
 Possibili implementazioni sono:
-- SOA
-- REST-full
-- Microservizi
+- **SOA**
+- **REST-full**
+- **Microservizi**
 
 ## SOA (Service Oriented Architectures)
 La business logic in questo caso è scomposta in parti (servizi) più piccole, autonome, indipendenti e distribuite.
 - Possibile utilizzare linguaggi e tecnologie diverse per ogni servizio.
 - Ogni servizio è localizzabile tramite un endpoint **(URI = Universal Resource Identifier)**
-- Per comunicare tra loro, i servizi devono avere un _contract_ (API) chiaro e aderire ad uno standard.
+- Per comunicare tra loro, i servizi devono avere un _contract_ (**API**) chiaro e aderire ad uno standard.
 - La comunicazione avviene tramite messaggi, scambiabili tramite **richieste HTTP** o tramite **SOAP (Simple Object Access Protocol)**
+- Ogni servizio può interagire tramite messaggi con un **Service Consumer** (componente software)
+- **Proprietà dei servizi**:
+  - Riutilizzabili
+  - Condividono contratto formale
+  - Progettati per interagire senza necessità di dipendenze tra loro
+  - Logica astratta esposta
+  - Componibili
+  - Autonomi
+  - Stateless
+  - Comprensibili
+
+## SOA - Vantaggi
+Questo tipo di architettura evita il problema dell'**integration spaghetti** (problemi di dipendenza causati da integrazione di funzionalità senza un preciso ordine). Inoltre migliorano:
+- Adattabilità
+- Manutenibilità
+- Riusabilità (non nel vero senso del termine, bensì non è necessario scartare tutto per implementare nuove funzionalità)
+
+Si evita anche il problema dell'**object soup**: vengono definiti i confini tra pezzi di logica, i quali rappresentano diverse aree di business.
+
+## Web Service
+E' un esempio di SOA basato su:
+- XML
+- SOAP
+- WSDL
+
+Garantisce interoperabilità tra middleware eterogenei. Provider e customer utilizzano messaggi per scambiarsi richieste/risposte sotto forma di documenti. Interoperabilità tra messaggi e Remote Procedure Calls.
+
+## Web Service - SOAP
+SOAP è un linguaggio XML che **definisce formato/struttura di un messaggio**. Un documento SOAP è composto da:
+- Header (info generali)
+- Body (payload)
+- Endpoint mittente
+- Endpoint destinatario
+
+## Web Service - WSDL
+WSDL è un linguaggio XML che definisce sintatticamente l'interfaccia:
+- tipologia di porta (specifica operazioni astratte)
+- collegamenti tra l'insieme di operazioni con il protocollo di trasporto concreto e i formati di serializzazione (HTTP)
+
+## SOA - API
+Interfacce che permetto a diverse applicazioni software di comunicare tra loro, facilitando l'accesso/scambio di dati o funzionalità in modo standardizzato. Consentono ad un'applicazione di utilizzare i servizi offerti da un'altra, senza conoscere i dettagli implementativi.
+
+## REST
+REpresentational State Transfer: tecnologia/architettura platform-indipendent, sviluppata per consentire una comunicazione di componenti non dipendenti tra loro, tramite interfacce e utilizzando protocolli web standard. E' una tecnologia molto semplice e scalabile. 
+
+
 
