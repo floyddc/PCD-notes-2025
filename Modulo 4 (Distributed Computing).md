@@ -104,6 +104,9 @@ Trovare un accordo tra i processi distribuiti riguardo il valore di una propriet
   - **Paxos**: protocollo utilizzato quando si ha a che fare con una rete di nodi non affidabili.
   - **Raft**: equivalente a Paxos in termini di fault-tolerance e performance, ma più semplice da capire e implementare. Consiste nel distribuire una macchina a stati su un cluster di sistemi computazionali. 
 
+## MOM (Message Oriented Middlewares)
+Consentono lo scambio di messaggi anche tra applicazioni non in esecuzione nello stesso momento, grazie all'utilizzo di code e brokers, i quali permetto la ricezione di tali messaggi in un secondo momento.
+
 ## Service Oriented Computing
 Approccio attualmente più utilizzato per sviluppare sistemi distribuiti.<br>
 **Servizio**: componente software indipendente, accessibile via rete, il quale fornisce una funzionalità.<br>
@@ -113,7 +116,7 @@ Possibili implementazioni sono:
 - **Microservizi**
 
 ## SOA (Service Oriented Architectures)
-La business logic in questo caso è scomposta in parti (servizi) più piccole, autonome, indipendenti e distribuite.
+La _business logic_ in questo caso è scomposta in parti (servizi) più piccole, autonome, indipendenti e distribuite.
 - Possibile utilizzare linguaggi e tecnologie diverse per ogni servizio.
 - Ogni servizio è localizzabile tramite un endpoint **(URI = Universal Resource Identifier)**
 - Per comunicare tra loro, i servizi devono avere un _contract_ (**API**) chiaro e aderire ad uno standard.
@@ -139,9 +142,9 @@ Si evita anche il problema dell'**object soup**: vengono definiti i confini tra 
 
 ## Web Service
 E' un esempio di SOA basato su:
-- XML
-- SOAP
-- WSDL
+- _XML_
+- _SOAP_
+- _WSDL_
 
 Garantisce interoperabilità tra middleware eterogenei. Provider e customer utilizzano messaggi per scambiarsi richieste/risposte sotto forma di documenti. Interoperabilità tra messaggi e Remote Procedure Calls.
 
@@ -162,6 +165,69 @@ Interfacce che permetto a diverse applicazioni software di comunicare tra loro, 
 
 ## REST
 REpresentational State Transfer: tecnologia/architettura platform-indipendent, sviluppata per consentire una comunicazione di componenti non dipendenti tra loro, tramite interfacce e utilizzando protocolli web standard. E' una tecnologia molto semplice e scalabile. 
+
+## Web Service - RESTful
+Si basa sui principi REST per implementare le RPC attraverso il web. Ha un **contratto** contenente:
+- **URI** della risorsa (da dove a dove i dati vengono trasferiti)
+- **Metodi** (meccanismi di protocollo) per trasferire i dati.
+  - HTTP, ad esempio, ha i metodi _GET_, _POST_, _PUT_, _DELETE_...
+- **Tipo dei dati** da trasferire (XML, JSON)
+
+## Tipologie di servizi
+- **Entity services**: stabiliscono confini funzionali associati ad una o più _entità_ di business.
+- **Task services**: stabiliscono confini funzionali associati ad uno o più _task_ di business.
+- **Utility services**: raggruppano _competenze_ correlate di servizi che potrebbero avere ampi confini funzionali.
+
+## Stili architetturali:
+- **Livellata**: ogni livello ha una propria responsabilità e dipende dai livelli sottostanti (esempio a 3 livelli: _Presentation_ + _Business logic_ + _Persistence_)
+- **Esagonale**: la _business logic_ è posizionata centralmente. L'applicazione presenta degli adattatori per far comunicare le applicazioni esterne con la _business logic_, ma quest'ultima non dipende dagli adattatori (vale invece il contrario)
+- **Monolitica**: l'implementazione è un singolo componente, ma la logica può avere ad esempio un'architettura esagonale. La _business logic_ presenta una o più porte inbound o outbound, per permettere l'interazione con l'esterno. Le porte inbound sono di fatto delle _API_ esposte.
+- **Microservizi**: consiste nello sviluppare una singola applicazione assemblando molteplici componenti (servizi)
+  - Ogni componente ha una propria _business logic_.
+  - Una modifica nell'implementazione di un componente non impatta sugli altri, anche se in comunicazione.
+  - I componenti sono deployabili singolarmente, senza fare il deploy dell'intera applicazione.
+
+## API dei servizi
+Definiscono operazioni invocabili dagli altri. Le operazioni possono essere:
+- _Comandi_: per aggiornare i dati.
+- _Query_: per richiedere dati.
+- _Eventi_: pubblicati dal servizio quando i dati cambiano.
+
+## Tecnologie ICP per le API
+Le Inter-Communication Communications possono sfruttare le seguenti tecnologie:
+- _REST_: per il trasporto di RPC o con websocket per interazioni event-oriented.
+- _MOM_ asincrone.
+- _gRPC_: framework RPC ad alte prestazioni.
+- _GRAPHQL_: linguaggio a query per API. 
+
+## Interazione tra servizi
+_Temporalmente_ parlando:
+- **Sincrona**: client aspetta la risposta del servizio, anche bloccandosi.
+- **Asincrona**: client non aspetta la risposta del servizio (che potrebbe non esserci, ma in ogni caso non viene inviata immediatamente)
+
+_Numericamente_ parlando:
+- **One-to-one**: ogni richiesta di un client viene processata da un solo servizio.
+  - _Request/response_ (sincrona)
+  - _Request/response_ (asincrona)
+  - _One-way notification_: il client invia una richiesta ad un servizio, ma non è prevista alcuna risposta.
+- **One-to-many**: ogni richiesta di un client viene processata da più servizi.
+  - _Publish/subscribe_: un client pubblica un messaggio di notifica che verrà accolto dai servizi interessati.
+  - _Pubish/async responses_: un client pubblica una richiesta e attende le risposte dei servizi interessati, ma entro un certo lasso di tempo.
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
 
 
 
