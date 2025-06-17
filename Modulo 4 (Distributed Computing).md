@@ -179,9 +179,9 @@ Si basa sui principi REST per implementare le RPC attraverso il web. Ha un **con
 - **Utility services**: raggruppano _competenze_ correlate di servizi che potrebbero avere ampi confini funzionali.
 
 ## Stili architetturali:
-- **Livellata**: ogni livello ha una propria responsabilità e dipende dai livelli sottostanti (esempio a 3 livelli: _Presentation_ + _Business logic_ + _Persistence_)
+- **Stratificato**: ogni livello ha una propria responsabilità e dipende dai livelli sottostanti (esempio a 3 livelli: _Presentation_ + _Business logic_ + _Persistence_)
 - **Esagonale**: la _business logic_ è posizionata centralmente. L'applicazione presenta degli adattatori per far comunicare le applicazioni esterne con la _business logic_, ma quest'ultima non dipende dagli adattatori (vale invece il contrario)
-- **Monolitica**: l'implementazione è un singolo componente, ma la logica può avere ad esempio un'architettura esagonale. La _business logic_ presenta una o più porte inbound o outbound, per permettere l'interazione con l'esterno. Le porte inbound sono di fatto delle _API_ esposte.
+- **Monolitico**: l'implementazione è un singolo componente, ma la logica può avere ad esempio un'architettura esagonale. La _business logic_ presenta una o più porte inbound o outbound, per permettere l'interazione con l'esterno. Le porte inbound sono di fatto delle _API_ esposte.
 - **Microservizi**: consiste nello sviluppare una singola applicazione assemblando molteplici componenti (servizi)
   - Ogni componente ha una propria _business logic_.
   - Una modifica nell'implementazione di un componente non impatta sugli altri, anche se in comunicazione.
@@ -214,20 +214,19 @@ _Numericamente_ parlando:
   - _Publish/subscribe_: un client pubblica un messaggio di notifica che verrà accolto dai servizi interessati.
   - _Pubish/async responses_: un client pubblica una richiesta e attende le risposte dei servizi interessati, ma entro un certo lasso di tempo.
 
+## Cloud Computing
+Attualmente è la principale scelta di design per le applicazioni distribuite su larga scala. Garantisce:
+- _Scalabilità_
+- _Eterogeneità_
+- _Disponibilità_
+- _Costi minori_ per le aziende.
+- _Rischi minori_ per le aziende.
 
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
+## Cloud Computing - Modelli
+- **SaaS (Software as a service)**
+  - Provider mette a disposizione un SW e permette l'accesso tramite una web app.
+- **PaaS (Platform as a service)**
+  - Provider mette a disposizione una piattaforma per inizializzare, eseguire e gestire app e piattaforme di computazione, senza doversi occupare dell'infrastruttura. 
+  - La sua evoluzione è **FaaS (Function as a service)**: serverless computing, quindi nessun server o OS da configurare e gestire. Alta scalabilità, disponibilità e fault tolerance. Utile quando bisogna gestire problemi semplici, stateless e prevedibili.
+- **IaaS (Infrastructure as a service)**
+  - Provider mette a disposizione HW (server, rete, memorie), ma gli utilizzatori devono installare e gestire OS e SW.
