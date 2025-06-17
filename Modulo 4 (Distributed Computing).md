@@ -147,6 +147,7 @@ E' un esempio di SOA basato su:
 - _WSDL_
 
 Garantisce interoperabilità tra middleware eterogenei. Provider e customer utilizzano messaggi per scambiarsi richieste/risposte sotto forma di documenti. Interoperabilità tra messaggi e Remote Procedure Calls.
+<br><br><br><br><br><br>
 
 ## Web Service - SOAP
 SOAP è un linguaggio XML che **definisce formato/struttura di un messaggio**. Un documento SOAP è composto da:
@@ -177,6 +178,7 @@ Si basa sui principi REST per implementare le RPC attraverso il web. Ha un **con
 - **Entity services**: stabiliscono confini funzionali associati ad una o più _entità_ di business.
 - **Task services**: stabiliscono confini funzionali associati ad uno o più _task_ di business.
 - **Utility services**: raggruppano _competenze_ correlate di servizi che potrebbero avere ampi confini funzionali.
+<br><br><br><br><br>
 
 ## Stili architetturali:
 - **Stratificato**: ogni livello ha una propria responsabilità e dipende dai livelli sottostanti (esempio a 3 livelli: _Presentation_ + _Business logic_ + _Persistence_)
@@ -210,6 +212,7 @@ _Numericamente_ parlando:
   - _Request/response_ (sincrona)
   - _Request/response_ (asincrona)
   - _One-way notification_: il client invia una richiesta ad un servizio, ma non è prevista alcuna risposta.
+  
 - **One-to-many**: ogni richiesta di un client viene processata da più servizi.
   - _Publish/subscribe_: un client pubblica un messaggio di notifica che verrà accolto dai servizi interessati.
   - _Pubish/async responses_: un client pubblica una richiesta e attende le risposte dei servizi interessati, ma entro un certo lasso di tempo.
